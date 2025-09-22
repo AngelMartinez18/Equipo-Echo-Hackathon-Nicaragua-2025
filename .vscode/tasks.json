@@ -1,0 +1,45 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install dependencies",
+			"type": "shell",
+			"command": "powershell.exe",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-Command",
+				"if (Test-Path yarn.lock) { if (Get-Command yarn -ErrorAction SilentlyContinue) { yarn install } else { npm install } } elseif (Test-Path package-lock.json) { npm install } else { npm install }"
+			]
+		},
+		{
+			"label": "Start Expo",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "start"],
+			"group": "build",
+			"problemMatcher": [],
+			"dependsOn": ["Install dependencies"],
+			"isBackground": true
+		},
+		{
+			"label": "Start Android",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "android"],
+			"problemMatcher": [],
+			"dependsOn": ["Install dependencies"],
+			"isBackground": true
+		},
+		{
+			"label": "Start Web",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "web"],
+			"problemMatcher": [],
+			"dependsOn": ["Install dependencies"],
+			"isBackground": true
+		}
+	]
+}
