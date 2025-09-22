@@ -1,0 +1,13 @@
+import React from 'react';
+import { View, Text } from 'react-native';
+import { use{{pascalCase name}}ViewModel } from '../viewmodels/{{pascalCase name}}ViewModel';
+
+export default function {{pascalCase name}}View() {
+  const { state } = use{{pascalCase name}}ViewModel();
+
+  return (
+    <View>
+      <Text>{{pascalCase name}} View</Text>
+    </View>
+  );
+}
