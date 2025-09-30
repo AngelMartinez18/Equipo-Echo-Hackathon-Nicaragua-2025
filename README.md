@@ -1,47 +1,50 @@
-Reto de Memoria Viva Nicaragua 2025 - Equipo Echo
-Nombre de la app: Kúentalo
+# Welcome to your Expo app 👋
 
-## Ejecutar el proyecto (Expo React Native)
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-Requisitos previos:
-- Node.js LTS instalado (incluye npm)
-- App Expo Go en tu teléfono (Android o iOS) o un emulador Android instalado
+## Get started
 
-### 1) Instalar dependencias
+1. Install dependencies
 
-En Windows PowerShell, desde la carpeta del proyecto (`echo-app`):
+   ```bash
+   npm install
+   ```
 
-```powershell
-npm install
+2. Start the app
+
+   ```bash
+   npx expo start
+   ```
+
+In the output, you'll find options to open the app in a
+
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Get a fresh project
+
+When you're ready, run:
+
+```bash
+npm run reset-project
 ```
 
-O puedes usar la tarea ya creada en VS Code: Terminal > Run Task… > "Install dependencies".
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-### 2) Iniciar el servidor de desarrollo
+## Learn more
 
-- Modo general (Expo Dev Server):
+To learn more about developing your project with Expo, look at the following resources:
 
-```powershell
-npm run start
-```
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-Esto abrirá Expo Developer Tools. Desde ahí puedes:
-- Android: presionar "a" o usar "Run on Android device/emulator".
-- Web: presionar "w" o ejecutar `npm run web`.
+## Join the community
 
-También tienes tareas en VS Code:
-- "Start Expo" (equivale a `npm run start`)
-- "Start Android" (equivale a `npm run android`)
-- "Start Web" (equivale a `npm run web`)
+Join our community of developers creating universal apps.
 
-### Notas y solución de problemas
-
-- Android SDK/Emulador: si usas emulador, asegúrate de tener Android Studio y un AVD iniciado antes de `npm run android`.
-- Red/Firewall: Expo usa puertos locales; si no se conecta el móvil, prueba el modo "Tunnel" en la UI de Expo o permite la app en el firewall.
-- Limpiar caché de Expo si ves errores extraños:
-
-```powershell
-npx expo start -c
-```
-
-- Versiones: este proyecto usa Expo `~54`, React `19`, React Native `0.81`. Usa la app Expo Go compatible más reciente.
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
