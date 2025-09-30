@@ -42,7 +42,7 @@ export default function loginScreen(){
         {/* 4. CONTENEDOR DE CONTENIDO (todo tu formulario y lógica) */}
         <View style={styles.contentContainer}> 
             <View style={styles.imageContainer}>
-                <Image source={require('../../assets/logoUN.jpg')}
+                <Image source={require('../../assets/logoUN.png')}
                     style={styles.logo}
                     resizeMode="contain"/>
             </View>
