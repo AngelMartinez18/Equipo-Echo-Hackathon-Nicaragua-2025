@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "1-echo",
-    "slug": "1-echo",
+    "name": "Kúentalo",
+    "slug": "Kuentalo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/logoUN.png",
     "scheme": "1echo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -44,6 +44,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+      },
+      "extra": {
+        "defaultCredentials": {
+          "email": "marangelantonio18@gmail.com",
+          "password": "Demo1234"
+        }
+      }
   }
 }

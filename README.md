@@ -1,3 +1,8 @@
+Hackathon Nicaragua Reto de Memoria Viva Nicaragua 2025 - Equipo Echo
+Nombre de la app: Kúentalo
+
+En Nicaragua, nuestra riqueza cultural vive en la memoria de las comunidades: en los relatos de los abuelos, en las recetas tradicionales, en las ferias patronales y en las leyendas transmitidas de generación en generación, pero gran parte de este conocimiento corre el riesgo de perderse por la falta de un espacio digital donde preservarlo y compartirlo. Kuéntalo nace como una aplicación educativa y cultural para rescatar, registrar y difundir estos saberes de manera colaborativa
+
 # Bienvenido a tu app de Expo 👋
 
 Este es un proyecto de [Expo](https://expo.dev) creado con [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).

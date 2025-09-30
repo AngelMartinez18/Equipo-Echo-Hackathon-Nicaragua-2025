@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -9,8 +10,18 @@ import { Image, ImageBackground, StyleSheet, Switch, Text, TextInput, TouchableO
 // **¡RECUERDA CAMBIAR ESTA RUTA!**
 const BACKGROUND_IMAGE = require('../../assets/imagenFon.png'); 
 
-export default function loginScreen(){
-    const {control, handleSubmit} = useForm();
+export default function LoginScreen(){
+        // Credenciales por defecto definidas en app.json -> expo.extra.defaultCredentials
+        const defaultCredentials = (Constants?.expoConfig as any)?.extra?.defaultCredentials as
+                | { email?: string; password?: string }
+                | undefined;
+
+        const {control, handleSubmit} = useForm({
+                defaultValues: {
+                        email: defaultCredentials?.email ?? '',
+                        password: defaultCredentials?.password ?? '',
+                },
+        });
     const [isChecked, setIsChecked] = useState(false);
     
     const onSubmit = async (data: any) => {
@@ -25,7 +36,18 @@ export default function loginScreen(){
       alert("Credenciales incorrectas");
     }
   } else {
-    alert("No hay usuario registrado");
+        // Si no hay usuario registrado, permitir usar las credenciales por defecto (solo para demo)
+        if (
+            defaultCredentials?.email &&
+            defaultCredentials?.password &&
+            data.email === defaultCredentials.email &&
+            data.password === defaultCredentials.password
+        ) {
+            await AsyncStorage.setItem("userToken", "fake-token");
+            router.replace("/home");
+        } else {
+            alert("No hay usuario registrado. Puedes usar las credenciales de demo configuradas o registrarte.");
+        }
   }
 };
 
