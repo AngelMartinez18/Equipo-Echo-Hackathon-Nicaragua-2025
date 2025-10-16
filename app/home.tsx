@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Dimensions, FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // Imagen de fondo
 const BACKGROUND_IMAGE = require('../assets/menu.png');
@@ -15,7 +15,7 @@ const carruselImages = [
 
 // Bailes nicaragüenses
 const bailes = [
-  { nombre: 'Gueguense', imagen: require('../assets/image 22.png') },
+  { nombre: 'Gueguense', imagen: require('../assets/Gueguense.jpg') },
   { nombre: 'Palo de mayo', imagen: require('../assets/image 23.png') },
   { nombre: 'Toro huaco', imagen: require('../assets/image 24.png') },
 ];
@@ -121,22 +121,27 @@ export default function PerfilScreen() {
         />
 
         {/* Botón cerrar sesión */}
-        <Button title="Cerrar sesión" onPress={logout} />
+        <TouchableOpacity onPress={logout} style={{ marginTop: 20, alignSelf: 'center' }}>
+          <Text style={{ color: 'white', fontFamily: 'Poppins_500Medium', fontSize: 16 }}>Cerrar sesión</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navButton}>
-          <Image source={require('../assets/imag4.png')} style={styles.navIcon} />
+          <Image source={require('../assets/home.png')} style={styles.navIcon} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton}>
-          <Image source={require('../assets/image 25.png')} style={styles.navIcon} />
+          <Image source={require('../assets/Noticias.png')} style={styles.navIcon} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton}>
-          <Image source={require('../assets/img2.png')} style={styles.navIcon} />
+          <Image source={require('../assets/punto.png')} style={styles.navIcon} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton}>
-          <Image source={require('../assets/img3.png')} style={styles.navIcon} />
+          <Image source={require('../assets/libro.png')} style={styles.navIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Image source={require('../assets/escribir.png')} style={styles.navIcon} />
         </TouchableOpacity>
       </View>
     </ImageBackground>
