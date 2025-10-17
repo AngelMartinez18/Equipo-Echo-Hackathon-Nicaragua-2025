@@ -8,23 +8,23 @@ const BACKGROUND_IMAGE = require('../assets/menu.png');
 
 // Carrusel de imágenes (simulado)
 const carruselImages = [
-  require('../assets/image 22.png'),
-  require('../assets/image 23.png'),
-  require('../assets/image 24.png'),
+  require('../assets/Gueguense.jpg'),
+  require('../assets/ElPadreSinCabeza.jpg'),
+  require('../assets/ToroHuaco.jpg'),
 ];
 
 // Bailes nicaragüenses
 const bailes = [
   { nombre: 'Gueguense', imagen: require('../assets/Gueguense.jpg') },
-  { nombre: 'Palo de mayo', imagen: require('../assets/image 23.png') },
-  { nombre: 'Toro huaco', imagen: require('../assets/image 24.png') },
+  { nombre: 'Palo de mayo', imagen: require('../assets/PalodeMayo.jpg') },
+  { nombre: 'Toro huaco', imagen: require('../assets/ToroHuaco.jpg') },
 ];
 
 // Cuentos Nicas
 const cuentos = [
-  { nombre: 'El pájaro azul', imagen: require('../assets/image 22.png') },
+  { nombre: 'El pájaro azul', imagen: require('../assets/ElPajaroAzul.jpg') },
   { nombre: 'La princesa', imagen: require('../assets/image 23.png') },
-  { nombre: 'El padre', imagen: require('../assets/image 24.png') },
+  { nombre: 'El padre', imagen: require('../assets/ElPadreSinCabeza.jpg') },
 ];
 
 export default function PerfilScreen() {
@@ -168,21 +168,22 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 16,
+    
+    padding: 20,
     zIndex: 2,
-  },
-  iconButton: {
-    marginHorizontal: 8,
   },
   icon: {
     width: 32,
     height: 32,
   },
+  iconButton: {
+    marginRight: 20,
+  },
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 16,
+    marginLeft: 'auto',
+    justifyContent: 'flex-end',
   },
   profileName: {
     color: 'white',
