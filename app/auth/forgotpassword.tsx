@@ -8,7 +8,6 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
-  Switch,
   Text,
   TextInput,
   TouchableOpacity,
@@ -29,17 +28,19 @@ export default function LoginScreen() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<{ email: string; password: string; newPassword: string }>({
     defaultValues: {
       email: defaultCredentials?.email ?? "",
       password: defaultCredentials?.password ?? "",
+      newPassword: "",
     },
   });
 
-  const [isChecked, setIsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const onSubmit = async (data: any) => {
+    // Obtener usuario guardado
     const userDataString = await AsyncStorage.getItem("userData");
     if (userDataString) {
       const userData = JSON.parse(userDataString);
@@ -48,22 +49,12 @@ export default function LoginScreen() {
         data.password === userData.password
       ) {
         await AsyncStorage.setItem("userToken", "fake-token");
-
-        // ✅ Guardar el perfil activo con el nombre de usuario
-        await AsyncStorage.setItem(
-          "activeUser",
-          JSON.stringify({
-            username: userData.username,
-            email: userData.email,
-          })
-        );
-
         router.replace("/home");
       } else {
         alert("Credenciales incorrectas");
       }
     } else {
-      // Lógica para credenciales por defecto (demo)
+      // Si no hay usuario registrado, permitir usar las credenciales por defecto (solo para demo)
       if (
         defaultCredentials?.email &&
         defaultCredentials?.password &&
@@ -71,20 +62,10 @@ export default function LoginScreen() {
         data.password === defaultCredentials.password
       ) {
         await AsyncStorage.setItem("userToken", "fake-token");
-
-        // Puedes guardar un nombre genérico si no hay username
-        await AsyncStorage.setItem(
-          "activeUser",
-          JSON.stringify({
-            username: "UsuarioDemo",
-            email: defaultCredentials.email,
-          })
-        );
-
         router.replace("/home");
       } else {
         alert(
-          "No hay usuario registrado. Puedes Registrarte o Probar a iniciar sesión nuevamente."
+          "No hay usuario registrado. Puedes Registrarte o Probar a iniciar sesion nuevamente."
         );
       }
     }
@@ -110,7 +91,7 @@ export default function LoginScreen() {
           />
         </View>
 
-        <Text style={styles.title}>Iniciar Sesión</Text>
+        <Text style={styles.title}>Reestablecer Contraseña</Text>
 
         <Text style={styles.textcontent}>Correo electrónico</Text>
         <Controller
@@ -142,8 +123,8 @@ export default function LoginScreen() {
           )}
         />
 
-        <Text style={styles.textcontent}>Contraseña</Text>
-        <View style={{ position: "relative" }}>
+        <Text style={styles.textcontent}>Contraseña anterior</Text>
+        <View style={styles.inputWrapper}>
           <Controller
             control={control}
             name="password"
@@ -158,67 +139,58 @@ export default function LoginScreen() {
               />
             )}
           />
+
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
-            style={{
-              position: "absolute",
-              right: 15,
-              top: 12,
-            }}
+            style={styles.iconButton}
+            accessibilityLabel={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
           >
             <FontAwesome
               name={showPassword ? "eye-slash" : "eye"}
               size={18}
               color="#000"
+              paddingBottom={10}
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => router.push("/auth/forgotpassword")}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.forgotPasswordText}>
-            ¿Olvidaste tu contraseña?{" "}
-            <Text style={styles.regisLink}>Recupera aquí</Text>
-          </Text>
-        </TouchableOpacity>
 
-        <View style={styles.checkContainer}>
-          <Switch value={isChecked} onValueChange={setIsChecked} />
-          <Text style={styles.checkLabel}>Recordar Contraseña</Text>
+        <Text style={styles.textcontent}>Nueva Contraseña</Text>
+        <View style={styles.inputWrapper}>
+          <Controller
+            control={control}
+            name="newPassword"
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Nueva Contraseña"
+                secureTextEntry={!showNewPassword}
+                onChangeText={onChange}
+                value={value}
+                placeholderTextColor="#777"
+              />
+            )}
+          />
+
+          <TouchableOpacity
+            onPress={() => setShowNewPassword(!showNewPassword)}
+            style={styles.iconButton}
+            accessibilityLabel={showNewPassword ? "Ocultar nueva contraseña" : "Mostrar nueva contraseña"}
+          >
+            <FontAwesome
+              name={showNewPassword ? "eye-slash" : "eye"}
+              size={18}
+              color="#000"
+            />
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={handleSubmit(onSubmit)}
         >
-          <Text style={styles.buttonText}> Iniciar Sesión</Text>
+          <Text style={styles.buttonText}>Confirmar Contraseña</Text>
         </TouchableOpacity>
 
-        <View style={styles.divider} />
-
-        <TouchableOpacity style={styles.button}>
-          <View style={styles.bbContent}>
-            <FontAwesome name="google" size={20} color="white" />
-            <Text style={styles.bbText}>Iniciar sesion con Google</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button}>
-          <View style={styles.bbContent}>
-            <FontAwesome name="facebook" size={20} color="white" />
-            <Text style={styles.bbText}>Iniciar sesión con Facebook</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => router.push("/auth/registro")}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.RegistroText}>
-            ¿No tienes cuenta? <Text style={styles.regisLink}>Registrate</Text>
-          </Text>
-        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -256,6 +228,17 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     backgroundColor: "white", // **Mejora:** Fondo blanco para que el texto sea legible
+  },
+  inputWrapper: {
+    position: "relative",
+    marginBottom: 10,
+  },
+  iconButton: {
+    position: "absolute",
+    right: 15,
+    top: 12,
+    zIndex: 3,
+    padding: 6,
   },
   title: {
     fontFamily: "Poppins_500Medium",

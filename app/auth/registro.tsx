@@ -1,8 +1,10 @@
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  Alert,
   Image,
   ImageBackground,
   StyleSheet,
@@ -12,8 +14,38 @@ import {
   View,
 } from "react-native";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+type FormData = {
+  username: string;
+  email: string;
+  password: string;
+  birthMonth: string;
+  birthDay: string;
+  birthYear: string;
+};
+
 export default function RegisterScreen() {
-  const { control, handleSubmit } = useForm();
+  const [showPassword, setShowPassword] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    trigger,
+    getValues,
+    setFocus,
+  formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      birthMonth: "",
+      birthDay: "",
+      birthYear: "",
+    },
+    mode: "onBlur", // valida al perder foco; también puedes usar "onChange" o "all"
+  });
 
   const onSubmit = async (data: any) => {
     // Guardar usuario en AsyncStorage
@@ -44,106 +76,244 @@ export default function RegisterScreen() {
         <Controller
           control={control}
           name="username"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Nombre de usuario"
-              onChangeText={onChange}
-              value={value}
-              placeholderTextColor="#777"
-            />
+          rules={{
+            required: "El nombre de usuario es obligatorio",
+            minLength: {
+              value: 3,
+              message: "Debe tener al menos 3 caracteres",
+            },
+            maxLength: {
+              value: 20,
+              message: "No puede superar 20 caracteres",
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <TextInput
+                style={[styles.input, errors.username && styles.inputError]}
+                placeholder="Ej: juan_perez"
+                placeholderTextColor="#777"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+              {errors.username && (
+                <Text style={styles.errorText}>{errors.username.message}</Text>
+              )}
+            </>
           )}
         />
-        {/* Texto informativo bajo el campo de usuario */}
-        <Text style={styles.infoText}>
-          No tienes que usar tu nombre real, puedes usar otro nombre para
-          proteger tu privacidad
-        </Text>
 
+        <Text style={styles.label}>Correo Electrónico</Text>
         {/* Campo: Correo electrónico */}
         <Controller
           control={control}
           name="email"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Correo electrónico"
-              onChangeText={onChange}
-              value={value}
-              placeholderTextColor="#777"
-            />
+          rules={{
+            required: "El correo es obligatorio",
+            pattern: {
+              value: emailRegex,
+              message: "Formato de correo no válido",
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <TextInput
+                style={[styles.input, errors.email && styles.inputError]}
+                placeholder="correo@ejemplo.com"
+                placeholderTextColor="#777"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+              {errors.email && (
+                <Text style={styles.errorText}>{errors.email.message}</Text>
+              )}
+            </>
           )}
         />
 
+        <Text style={styles.label}>Contraseña</Text>
         {/* Campo: Contraseña */}
         <Controller
           control={control}
           name="password"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Contraseña"
-              secureTextEntry
-              onChangeText={onChange}
-              value={value}
-              placeholderTextColor="#777"
-            />
+          rules={{
+            required: "La contraseña es obligatoria",
+            minLength: {
+              value: 6,
+              message: "Debe tener al menos 6 caracteres",
+            },
+            maxLength: {
+              value: 20,
+              message: "No puede superar 20 caracteres",
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={{ position: "relative" }}>
+              <TextInput
+                style={[styles.input, errors.password && styles.inputError]}
+                placeholder="Contraseña"
+                secureTextEntry={!showPassword}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholderTextColor="#777"
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: 15,
+                  top: 12,
+                }}
+              >
+                <FontAwesome
+                  name={showPassword ? "eye" : "eye-slash"}
+                  size={18}
+                  color="#000"
+                />
+              </TouchableOpacity>
+              {errors.password && (
+                <Text style={styles.errorText}>{errors.password.message}</Text>
+              )}
+            </View>
           )}
         />
+
+        
 
         {/* Fecha de nacimiento */}
         <Text style={styles.label}>¿Cuál es tu fecha de nacimiento?</Text>
         <View style={styles.birthContainer}>
-          <Controller
-            control={control}
-            name="birthMonth"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={styles.birthInput}
-                placeholder="MM"
-                maxLength={2}
-                keyboardType="numeric"
-                onChangeText={onChange}
-                value={value}
-                placeholderTextColor="#777"
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="birthDay"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={styles.birthInput}
-                placeholder="DD"
-                maxLength={2}
-                keyboardType="numeric"
-                onChangeText={onChange}
-                value={value}
-                placeholderTextColor="#777"
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="birthYear"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={styles.birthInput}
-                placeholder="AAAA"
-                maxLength={4}
-                keyboardType="numeric"
-                onChangeText={onChange}
-                value={value}
-                placeholderTextColor="#777"
-              />
-            )}
-          />
+          <View style={{ alignItems: 'center' }}>
+            <Controller
+              control={control}
+              name="birthDay"
+              rules={{ required: 'Día es obligatorio', pattern: { value: /^(0?[1-9]|[12][0-9]|3[01])$/, message: 'Día inválido' } }}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <TextInput
+                    style={[styles.birthInput, errors.birthDay && styles.inputError]}
+                    placeholder="DD"
+                    maxLength={2}
+                    keyboardType="numeric"
+                    onChangeText={onChange}
+                    value={value}
+                    placeholderTextColor="#777"
+                  />
+                  {errors.birthDay && (
+                    <Text style={styles.errorText}>{errors.birthDay.message}</Text>
+                  )}
+                </>
+              )}
+            />
+          </View>
+
+          <View style={{ alignItems: 'center' }}>
+            <Controller
+              control={control}
+              name="birthMonth"
+              rules={{ required: 'Mes es obligatorio', pattern: { value: /^(0?[1-9]|1[0-2])$/, message: 'Mes inválido' } }}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <TextInput
+                    style={[styles.birthInput, errors.birthMonth && styles.inputError]}
+                    placeholder="MM"
+                    maxLength={2}
+                    keyboardType="numeric"
+                    onChangeText={onChange}
+                    value={value}
+                    placeholderTextColor="#777"
+                  />
+                  {errors.birthMonth && (
+                    <Text style={styles.errorText}>{errors.birthMonth.message}</Text>
+                  )}
+                </>
+              )}
+            />
+          </View>
+
+          <View style={{ alignItems: 'center' }}>
+            <Controller
+              control={control}
+              name="birthYear"
+              rules={{ required: 'Año es obligatorio', pattern: { value: /^(19|20)\d{2}$/, message: 'Año inválido' } }}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <TextInput
+                    style={[styles.birthInput, errors.birthYear && styles.inputError]}
+                    placeholder="AAAA"
+                    maxLength={4}
+                    keyboardType="numeric"
+                    onChangeText={onChange}
+                    value={value}
+                    placeholderTextColor="#777"
+                  />
+                  {errors.birthYear && (
+                    <Text style={styles.errorText}>{errors.birthYear.message}</Text>
+                  )}
+                </>
+              )}
+            />
+          </View>
         </View>
 
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={handleSubmit(onSubmit)}
+          onPress={async () => {
+            // Forzar validación y luego actuar según el resultado
+            const valid = await trigger();
+            if (!valid) {
+              // Obtener valores y errores actuales
+              const values = getValues();
+              const requiredFields: (keyof FormData)[] = [
+                "username",
+                "email",
+                "password",
+                "birthMonth",
+                "birthDay",
+                "birthYear",
+              ];
+
+              // Detectar los campos vacíos primero
+              const missing = requiredFields.filter(
+                (f) => !values[f] || String(values[f]).trim() === ""
+              );
+
+              if (missing.length > 0) {
+                Alert.alert(
+                  "Faltan campos",
+                  "Por favor completa todos los campos requeridos."
+                );
+                // Enfocar el primer campo faltante
+                setTimeout(() => setFocus(missing[0] as any), 50);
+                return;
+              }
+
+              // Si no hay campos vacíos, pero la validación falla (formatos incorrectos)
+              const errorFields = Object.keys(errors);
+              if (errorFields.length > 0) {
+                Alert.alert(
+                  "Campos inválidos",
+                  "Por favor corrige los campos indicados."
+                );
+                setTimeout(() => setFocus(errorFields[0] as any), 50);
+                return;
+              }
+
+              // Fallback genérico
+              Alert.alert(
+                "Errores",
+                "Por favor revisa los campos del formulario."
+              );
+              return;
+            }
+
+            handleSubmit(onSubmit)();
+          }}
         >
           <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
@@ -167,7 +337,8 @@ export default function RegisterScreen() {
         {/* Texto: Ya tengo cuenta */}
         <TouchableOpacity onPress={() => router.replace("/auth/login")}>
           <Text style={styles.RegistroText}>
-            ¿Ya tienes cuenta? <Text style={styles.regisLink}>Inicia sesión</Text>
+            ¿Ya tienes cuenta?{" "}
+            <Text style={styles.regisLink}>Inicia sesión</Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -177,10 +348,17 @@ export default function RegisterScreen() {
 
 // Cambios en los estilos para adaptar la UI
 const styles = StyleSheet.create({
+  inputError: {
+    borderColor: "#e74c3c",
+  },
+  errorText: {
+    color: "#e74c3c",
+    marginBottom: 8,
+  },
   divider: {
     height: 2,
     backgroundColor: "rgba(255, 255, 255, 0.4)", // Más sutil sobre fondo oscuro
-    marginVertical:10,
+    marginVertical: 10,
   },
   backgroundImage: {
     flex: 1,
@@ -225,7 +403,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "#fff",
-    fontSize: 13,
+    fontSize: 14,
     marginBottom: 6,
     marginLeft: 2,
   },
@@ -270,9 +448,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     fontSize: 16,
   },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
   buttonText: {
     fontSize: 18,
-    fontFamily: "Poppins_500medium",
+    fontFamily: "Poppins_500Medium",
     color: "white",
   },
   logo: {
@@ -298,9 +479,9 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_500Medium",
     marginLeft: 8,
   },
-    RegistroText: {
+  RegistroText: {
     textAlign: "center",
-    fontFamily: "Poppins_500medium",
+    fontFamily: "Poppins_500Medium",
     padding: 5,
     color: "white", // **Mejora:** Texto blanco sobre fondo oscuro
     fontSize: 16,
